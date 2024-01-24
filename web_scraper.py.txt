@@ -1,0 +1,25 @@
+pip install requests beautifulsoup4
+import requests
+from bs4 import BeautifulSoup
+
+def fetch_articles(url):
+    response = requests.get(url)
+    if response.status_code == 200:
+        soup = BeautifulSoup(response.text, 'html.parser')
+        articles = soup.find_all('h2', class_='card-title')
+        return [article.text.strip() for article in articles]
+    else:
+        print(f"Failed to fetch data. Status code: {response.status_code}")
+        return None
+
+def main():
+    url = 'https://realpython.com'
+    articles = fetch_articles(url)
+
+    if articles:
+        print("Latest Articles:")
+        for i, article in enumerate(articles, 1):
+            print(f"{i}. {article}")
+
+if __name__ == "__main__":
+    main()
